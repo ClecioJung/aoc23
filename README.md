@@ -8,3 +8,4 @@ This repository contains my solutions to the Advent of Code 2023 challenges. I'm
 - [Day 02](day02/description.txt): [Rust Solution](day02/src/main.rs)
 - [Day 03](day03/description.txt): [Rust Solution](day03/src/main.rs)
 - [Day 04](day04/description.txt): [Rust Solution](day04/src/main.rs)
+- [Day 05](day05/description.txt): [Rust Solution](day05/src/main.rs)
