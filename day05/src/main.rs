@@ -1,4 +1,6 @@
 use std::fs;
+use std::cmp;
+use std::ops::Range;
 
 #[derive(Debug)]
 struct Map {
@@ -52,35 +54,58 @@ impl Almanac {
         }
     }
 
-    fn map_seed_single_step(mappings: &Vec<Map>, seed: u64) -> u64 {
+    fn map_seeds_single_step(mappings: &Vec<Map>, seeds: Range<u64>) -> (Range<u64>, Option<Range<u64>>) {
         for mapping in mappings {
-            if seed >= mapping.src && seed < mapping.src + mapping.len {
-                return (seed - mapping.src) + mapping.dst;
+            if seeds.start >= mapping.src && seeds.start < mapping.src + mapping.len {
+                let end: u64 = cmp::min(seeds.end, mapping.src + mapping.len - 1);
+                let range = Range {
+                    start: (seeds.start - mapping.src) + mapping.dst,
+                    end: (end - mapping.src) + mapping.dst
+                };
+                let remainder = if end != seeds.end {
+                    Some(Range {
+                        start: end + 1,
+                        end: seeds.end
+                    })
+                } else {
+                    None
+                };
+                return (range, remainder);
             } 
         }
-        return seed;
+        return (seeds, None);
     }
 
-    fn map_seed(&self, seed: u64) -> u64 {
-        let soil = Almanac::map_seed_single_step(&self.seed_to_soil, seed);
-        let fertilizer = Almanac::map_seed_single_step(&self.soil_to_fertilizer, soil);
-        let water = Almanac::map_seed_single_step(&self.fertilizer_to_water, fertilizer);
-        let light = Almanac::map_seed_single_step(&self.water_to_light, water);
-        let temperature = Almanac::map_seed_single_step(&self.light_to_temperature, light);
-        let humidity = Almanac::map_seed_single_step(&self.temperature_to_humidity, temperature);
-        let location = Almanac::map_seed_single_step(&self.humidity_to_location, humidity);
+    fn map_seeds_vector_single_step(mappings: &Vec<Map>, list_of_seeds: Vec<Range<u64>>) -> Vec<Range<u64>> {
+        let mut output: Vec<Range<u64>> = Vec::new();
+        for seeds in list_of_seeds {
+            let mut next: Option<Range<u64>> = Some(seeds);
+            while let Some(current) = next {
+                let out = Almanac::map_seeds_single_step(mappings, current);
+                output.push(out.0);
+                next = out.1;
+            }
+        }
+        output
+    }
+
+    fn map_seeds(&self, seeds: Vec<Range<u64>>) -> Vec<Range<u64>> {
+        let soil = Almanac::map_seeds_vector_single_step(&self.seed_to_soil, seeds);
+        let fertilizer = Almanac::map_seeds_vector_single_step(&self.soil_to_fertilizer, soil);
+        let water = Almanac::map_seeds_vector_single_step(&self.fertilizer_to_water, fertilizer);
+        let light = Almanac::map_seeds_vector_single_step(&self.water_to_light, water);
+        let temperature = Almanac::map_seeds_vector_single_step(&self.light_to_temperature, light);
+        let humidity = Almanac::map_seeds_vector_single_step(&self.temperature_to_humidity, temperature);
+        let location = Almanac::map_seeds_vector_single_step(&self.humidity_to_location, humidity);
         location
-    }
-
-    fn map_seeds(&self, seeds: Vec<u64>) -> Vec<u64> {
-        seeds.iter().map(|seed| self.map_seed(*seed)).collect()
     }
 }
 
-fn parse_seeds(text: &str) -> Vec<u64> {
+fn parse_seeds(text: &str) -> Vec<Range<u64>> {
     let first_line: &str = text.lines().next().unwrap();
     let seeds_as_str: &str = &first_line["seeds: ".len()..].trim();
-    seeds_as_str.split(' ').map(|s| s.parse::<u64>().unwrap()).collect()
+    seeds_as_str.split(' ').map(|s| s.parse::<u64>().unwrap())
+        .map(|value| Range { start: value, end: value }).collect()
 }
 
 fn part1(filepath: &str) -> u64 {
@@ -88,64 +113,25 @@ fn part1(filepath: &str) -> u64 {
         .expect(&format!("Couldn't read the file '{}'", filepath));
     let seeds = parse_seeds(&input);
     let almanac = Almanac::parse_almanac(&input);
-    *almanac.map_seeds(seeds).iter().min().unwrap()
+    almanac.map_seeds(seeds).iter().map(|r| r.start).min().unwrap()
 }
 
-// The seeds are parsed differently for part 2
-// Too much memory was required, so I decided to implement it as a iterator,
-// instead of regular vectors
-// Even though it still takes about 2 minutes to run part 2
-#[derive(Debug)]
-struct Seeds {
-    current_index: usize,
-    current_value: u64,
-    values: Vec<(u64, u64)>
-}
-
-impl Seeds {
-    fn parse_seeds(text: &str) -> Seeds {
-        let first_line: &str = text.lines().next().unwrap();
-        let seeds_as_str: &str = &first_line["seeds: ".len()..].trim();
-        let numbers: Vec<u64> = seeds_as_str.split(' ').map(|s| s.parse::<u64>().unwrap()).collect();
-        if numbers.len() % 2 != 0 {
-            panic!("Expected seed numbers to come in pairs!");
-        }
-        let values: Vec<(u64, u64)> = numbers.chunks(2).map(|chunk| (chunk[0], chunk[1])).collect();
-        Seeds {
-            current_index: 0,
-            current_value: values[0].0,
-            values
-        }
+fn parse_seeds_as_ranges(text: &str) -> Vec<Range<u64>> {
+    let first_line: &str = text.lines().next().unwrap();
+    let seeds_as_str: &str = &first_line["seeds: ".len()..].trim();
+    let numbers: Vec<u64> = seeds_as_str.split(' ').map(|s| s.parse::<u64>().unwrap()).collect();
+    if numbers.len() % 2 != 0 {
+        panic!("Expected seed numbers to come in pairs!");
     }
-}
-
-impl Iterator for Seeds {
-    type Item = u64;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let (initial, len) = self.values[self.current_index];
-        let current_max = initial + len;
-        if self.current_value < current_max {
-            let result = self.current_value;
-            self.current_value += 1;
-            Some(result)
-        } else if self.current_index + 1 < self.values.len() {
-            self.current_index += 1;
-            let result = self.values[self.current_index].0;
-            self.current_value = result + 1;
-            Some(result)
-        } else {
-            None
-        }
-    }
+    numbers.chunks(2).map(|chunk| Range { start: chunk[0], end: chunk[0] + chunk[1]}).collect()
 }
 
 fn part2(filepath: &str) -> u64 {
     let input = fs::read_to_string(filepath)
         .expect(&format!("Couldn't read the file '{}'", filepath));
-    let seeds = Seeds::parse_seeds(&input);
+    let seeds = parse_seeds_as_ranges(&input);
     let almanac = Almanac::parse_almanac(&input);
-    seeds.map(|seed| almanac.map_seed(seed)).min().unwrap()
+    almanac.map_seeds(seeds).iter().map(|r| r.start).min().unwrap()
 }
 
 fn main() {
