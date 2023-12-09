@@ -69,8 +69,6 @@ func getHandType(cards string, jokerRule bool) int {
 	setOfCards := getSetOfCards(cards)
 	amountOfSets := len(setOfCards)
 	maxSet := setOfCards[0].amount
-	//fmt.Println("setOfCards:", setOfCards)
-
 	if jokerRule {
 		jokerIndex := findCard(setOfCards, 'J')
 		if jokerIndex > 0 {
