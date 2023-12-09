@@ -1,3 +1,3 @@
-module src/main.go
+module day07
 
 go 1.18

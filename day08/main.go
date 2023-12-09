@@ -99,6 +99,13 @@ func LCM(periods []int) int {
 // Each path is periodic, so we just need to find the period of each path,
 // and then the amount of steps will be the least common multiple (LCM)
 // between the periods
+// This is true because the initial and ending locations have the same signature:
+// HVA = (NMF, CTG) NMZ = (CTG, NMF)
+// LBA = (TBT, HGC) SJZ = (HGC, TBT)
+// FXA = (MQX, NDF) GNZ = (NDF, MQX)
+// GHA = (DLD, MBC) TNZ = (MBC, DLD)
+// PSA = (MLN, HHG) BNZ = (HHG, MLN)
+// AAA = (CLB, XLR) ZZZ = (XLR, CLB)
 func part02(filepath string) (int, error) {
 	content, err := ioutil.ReadFile(filepath)
 	if err != nil {
