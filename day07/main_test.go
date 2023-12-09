@@ -3,7 +3,7 @@ package main
 import "testing"
 
 func TestPart01(t *testing.T) {
-	expected := 288
+	expected := 6440
 	result, err := part01("sample.txt")
 	if err != nil {
 		t.Errorf("Error reading file: %v", err)
@@ -15,7 +15,7 @@ func TestPart01(t *testing.T) {
 }
 
 func TestResultPart01(t *testing.T) {
-	expected := 303600
+	expected := 252656917
 	result, err := part01("input.txt")
 	if err != nil {
 		t.Errorf("Error reading file: %v", err)
@@ -27,7 +27,7 @@ func TestResultPart01(t *testing.T) {
 }
 
 func TestPart02(t *testing.T) {
-	expected := 71503
+	expected := 5905
 	result, err := part02("sample.txt")
 	if err != nil {
 		t.Errorf("Error reading file: %v", err)
@@ -39,7 +39,7 @@ func TestPart02(t *testing.T) {
 }
 
 func TestResultPart02(t *testing.T) {
-	expected := 23654842
+	expected := 253499763
 	result, err := part02("input.txt")
 	if err != nil {
 		t.Errorf("Error reading file: %v", err)
