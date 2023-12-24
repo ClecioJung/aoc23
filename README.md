@@ -15,3 +15,4 @@ This repository contains my solutions to the Advent of Code 2023 challenges. I'm
 - [Day 09](day09/description.txt): [Golang Solution](day09/main.go)
 - [Day 10](day10/description.txt): [Golang Solution](day10/main.go)
 - [Day 11](day11/description.txt): [Java Solution](day11/Main.java)
+- [Day 12](day12/description.txt): [Java Solution](day12/Main.java)
