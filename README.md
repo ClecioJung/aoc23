@@ -17,3 +17,4 @@ This repository contains my solutions to the Advent of Code 2023 challenges. I'm
 - [Day 11](day11/description.txt): [Java Solution](day11/Main.java)
 - [Day 12](day12/description.txt): [Java Solution](day12/Main.java)
 - [Day 13](day13/description.txt): [Java Solution](day13/Main.java)
+- [Day 14](day14/description.txt): [Java Solution](day14/Main.java)
