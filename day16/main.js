@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 const assert = require('assert');
 const fs = require('fs');
 
