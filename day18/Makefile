@@ -7,8 +7,13 @@ EXEC = main.exe
 
 all: $(EXEC)
 
+run: $(EXEC)
+	./$(EXEC)
+
 $(EXEC): $(SRC)
 	$(CXX) $(CXXFLAGS) -o $@ $(filter %.cpp,$^)
 
 clean:
 	rm -f $(EXEC)
+
+.PHONY: run clean

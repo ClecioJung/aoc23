@@ -2,4 +2,5 @@ bin/
 lib/
 *target/
 *.class
+*.o
 *.exe

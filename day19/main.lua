@@ -183,11 +183,11 @@ end
 function main()
     assert(part01("sample.txt") == 19114, "Part 01 incorrect for sample file")
     local part01output = part01("input.txt")
-    print("Part01:", part01output)
+    print("Part 01: " .. part01output)
     assert(part01output == 325952, "Part 01 incorrect for input file")
     assert(part02("sample.txt") == 167409079868000, "Part 02 incorrect for sample file")
     local part02output = part02("input.txt")
-    print("Part02:", part02output)
+    print("Part 02: " .. part02output)
     assert(part02output == 125744206494820, "Part 02 incorrect for input file")
 end
 

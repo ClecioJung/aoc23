@@ -105,11 +105,11 @@ func main() {
 		fmt.Fprintln(os.Stderr, "Error reading file:", err)
 		return
 	}
-	fmt.Println("part01:", result)
+	fmt.Println("Part 01:", result)
 	result, err = part02("input.txt")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error reading file:", err)
 		return
 	}
-	fmt.Println("part02:", result)
+	fmt.Println("Part 02:", result)
 }

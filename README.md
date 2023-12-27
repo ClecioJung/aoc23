@@ -1,6 +1,6 @@
 # Advent of Code 2023 Solutions
 
-This repository contains my solutions to the Advent of Code 2023 challenges. I'm using this problems to learn some programming languages such as Rust and Golang.
+This repository contains my solutions to the Advent of Code 2023 challenges. I'm using this problems to learn some programming languages such as Rust, Golang, Pascal, etc.
 
 ## Problems
 
@@ -23,3 +23,24 @@ This repository contains my solutions to the Advent of Code 2023 challenges. I'm
 - [Day 17](day17/description.txt): [Python Solution](day17/main.py)
 - [Day 18](day18/description.txt): [C++ Solution](day18/main.cpp)
 - [Day 19](day19/description.txt): [Lua Solution](day19/main.lua)
+- [Day 20](day20/description.txt): [Pascal Solution](day20/main.pas)
+
+## How to run
+
+To run a program for a specific day, simply use the `make` command followed by the day number. For example, to run the program for day 1:
+
+```bash
+make day01
+```
+
+Replace `day01` with the desired day and its number.
+
+If you want to run all programs in order, you can use the following command:
+
+```bash
+make
+```
+
+This will execute all the programs sequentially.
+
+Note: Make sure you have the necessary dependencies and configurations set up before running the programs.

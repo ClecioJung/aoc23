@@ -110,8 +110,8 @@ fn part2(filepath: &str) -> usize {
 }
 
 fn main() {
-    println!("part1: {}", part1("input.txt"));
-    println!("part2: {}", part2("input.txt"));
+    println!("Part 01: {}", part1("input.txt"));
+    println!("Part 02: {}", part2("input.txt"));
 }
 
 #[cfg(test)]
