@@ -1,4 +1,4 @@
-program ReadFileExample;
+program day20;
 
 type
     TStringArray = array of string;

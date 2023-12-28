@@ -41,6 +41,11 @@ day20:
 	cd $@ && make -s run
 	@echo
 
+day21:
+	@echo "Running $@"
+	cd $@ && ./main.jl
+	@echo
+
 clean:
 	rm -rf *.o *.exe *.class */target
 
