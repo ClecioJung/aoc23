@@ -46,6 +46,11 @@ day21:
 	cd $@ && ./main.jl
 	@echo
 
+day22:
+	@echo "Running $@"
+	cd $@ && ./main.pm
+	@echo
+
 clean:
 	rm -rf *.o *.exe *.class */target
 
