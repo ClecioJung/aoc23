@@ -26,6 +26,7 @@ This repository contains my solutions to the Advent of Code 2023 challenges. I'm
 - [Day 20](day20/description.txt): [Pascal Solution](day20/main.pas)
 - [Day 21](day21/description.txt): [Julia Solution](day21/main.jl)
 - [Day 22](day22/description.txt): [Perl Solution](day22/main.pm)
+- [Day 23](day23/description.txt): [D Solution](day23/main.d)
 
 ## How to run
 

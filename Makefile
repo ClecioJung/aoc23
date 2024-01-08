@@ -51,6 +51,11 @@ day22:
 	cd $@ && ./main.pm
 	@echo
 
+day23:
+	@echo "Running $@"
+	cd $@ && make -s run
+	@echo
+
 clean:
 	rm -rf *.o *.exe *.class */target
 

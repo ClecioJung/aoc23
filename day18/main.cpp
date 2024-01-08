@@ -132,7 +132,7 @@ int main(void) {
     std::cout << "Part 01: " << part01output << std::endl;
     assert(part02("sample.txt") == 952408144115);
     auto part02output = part02("input.txt");
-     assert(part02output == 96116995735219);
+    assert(part02output == 96116995735219);
     std::cout << "Part 02: " << part02output << std::endl;
     return EXIT_SUCCESS;
 }
