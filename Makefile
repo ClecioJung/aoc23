@@ -56,6 +56,11 @@ day23:
 	cd $@ && make -s run
 	@echo
 
+day24:
+	@echo "Running $@"
+	cd $@ && ./main.php
+	@echo
+
 clean:
 	rm -rf *.o *.exe *.class */target
 

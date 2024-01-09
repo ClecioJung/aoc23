@@ -27,6 +27,7 @@ This repository contains my solutions to the Advent of Code 2023 challenges. I'm
 - [Day 21](day21/description.txt): [Julia Solution](day21/main.jl)
 - [Day 22](day22/description.txt): [Perl Solution](day22/main.pm)
 - [Day 23](day23/description.txt): [D Solution](day23/main.d)
+- [Day 24](day24/description.txt): [Php Solution](day24/main.php)
 
 ## How to run
 
@@ -47,3 +48,71 @@ make
 This will execute all the programs sequentially.
 
 Note: Make sure you have the necessary dependencies and configurations set up before running the programs.
+
+## Version of the apps used
+
+```bash
+$ make --version
+GNU Make 4.3
+Built for x86_64-pc-linux-gnu
+Copyright (C) 1988-2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+$ cargo --version
+cargo 1.70.0
+
+$ go version
+go version go1.18.1 linux/amd64
+
+$ java --version
+openjdk 11.0.21 2023-10-17
+OpenJDK Runtime Environment (build 11.0.21+9-post-Ubuntu-0ubuntu122.04)
+OpenJDK 64-Bit Server VM (build 11.0.21+9-post-Ubuntu-0ubuntu122.04, mixed mode, sharing)
+
+$ node --version
+v12.22.9
+
+$ python3 --version
+Python 3.10.12
+
+$ g++ --version
+g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+$ lua -v
+Lua 5.4.4  Copyright (C) 1994-2022 Lua.org, PUC-Rio
+
+$ fpc -iV
+3.2.2
+
+$ julia -v
+julia version 1.6.7
+
+$ perl -v
+
+This is perl 5, version 34, subversion 0 (v5.34.0) built for x86_64-linux-gnu-thread-multi
+(with 60 registered patches, see perl -V for more detail)
+
+Copyright 1987-2021, Larry Wall
+
+Perl may be copied only under the terms of either the Artistic License or the
+GNU General Public License, which may be found in the Perl 5 source kit.
+
+Complete documentation for Perl, including FAQ lists, should be found on
+this system using "man perl" or "perldoc perl".  If you have access to the
+Internet, point your browser at http://www.perl.org/, the Perl Home Page.
+
+$ dmd --version
+DMD64 D Compiler v2.106.1
+Copyright (C) 1999-2023 by The D Language Foundation, All Rights Reserved written by Walter Bright
+
+$ php --version
+PHP 8.1.2-1ubuntu2.14 (cli) (built: Aug 18 2023 11:41:11) (NTS)
+Copyright (c) The PHP Group
+Zend Engine v4.1.2, Copyright (c) Zend Technologies
+    with Zend OPcache v8.1.2-1ubuntu2.14, Copyright (c), by Zend Technologies
+```

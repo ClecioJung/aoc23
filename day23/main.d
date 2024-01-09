@@ -210,7 +210,7 @@ struct Graph {
             return -1;
         }
         this.nodes ~= pos;
-        size_t end = this.nodes.length - 1;
+        size_t end = cast(long)this.nodes.length - 1;
         this.paths ~= Path(node, end, distance);
         return cast(int)end;
     }
