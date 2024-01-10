@@ -7,12 +7,8 @@ function parse_input($file_path) {
     $hailstones = array();
     foreach ($lines as $line) {
         $exploded_line = explode(" @ ", $line);
-        $position = array_map(function ($element) {
-            return intval($element);
-        }, explode(", ", $exploded_line[0]));
-        $velocity = array_map(function ($element) {
-            return intval($element);
-        }, explode(", ", $exploded_line[1]));
+        $position = array_map("intval", explode(", ", $exploded_line[0]));
+        $velocity = array_map("intval", explode(", ", $exploded_line[1]));
         $hailstone = array(
             "pos" => $position,
             "vel" => $velocity

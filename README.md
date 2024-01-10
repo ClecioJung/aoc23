@@ -2,6 +2,8 @@
 
 This repository contains my solutions to the Advent of Code 2023 challenges. I'm using this problems to learn some programming languages such as Rust, Golang, Pascal, etc.
 
+![AOC](./aoc.png)
+
 ## Problems
 
 - [Day 01](day01/description.txt): [Rust Solution](day01/src/main.rs)
@@ -28,12 +30,13 @@ This repository contains my solutions to the Advent of Code 2023 challenges. I'm
 - [Day 22](day22/description.txt): [Perl Solution](day22/main.pm)
 - [Day 23](day23/description.txt): [D Solution](day23/main.d)
 - [Day 24](day24/description.txt): [Php Solution](day24/main.php)
+- [Day 25](day25/description.txt): [Kotlin Solution](day25/main.kt)
 
 ## How to run
 
 To run a program for a specific day, simply use the `make` command followed by the day number. For example, to run the program for day 1:
 
-```bash
+```console
 make day01
 ```
 
@@ -41,7 +44,7 @@ Replace `day01` with the desired day and its number.
 
 If you want to run all programs in order, you can use the following command:
 
-```bash
+```console
 make
 ```
 
@@ -49,9 +52,30 @@ This will execute all the programs sequentially.
 
 Note: Make sure you have the necessary dependencies and configurations set up before running the programs.
 
-## Version of the apps used
+## Environment
 
-```bash
+```console
+$ neofetch
+             ...-:::::-...                 cj@cj-box 
+          .-MMMMMMMMMMMMMMM-.              --------- 
+      .-MMMM`..-:::::::-..`MMMM-.          OS: Linux Mint 21.1 x86_64 
+    .:MMMM.:MMMMMMMMMMMMMMM:.MMMM:.        Host: VirtualBox 1.2 
+   -MMM-M---MMMMMMMMMMMMMMMMMMM.MMM-       Kernel: 5.15.0-91-generic 
+ `:MMM:MM`  :MMMM:....::-...-MMMM:MMM:`    Uptime: 43 mins 
+ :MMM:MMM`  :MM:`  ``    ``  `:MMM:MMM:    Packages: 2919 (dpkg) 
+.MMM.MMMM`  :MM.  -MM.  .MM-  `MMMM.MMM.   Shell: bash 5.1.16 
+:MMM:MMMM`  :MM.  -MM-  .MM:  `MMMM-MMM:   Resolution: 1920x974 
+:MMM:MMMM`  :MM.  -MM-  .MM:  `MMMM:MMM:   DE: Cinnamon 5.6.8 
+:MMM:MMMM`  :MM.  -MM-  .MM:  `MMMM-MMM:   WM: Mutter (Muffin) 
+.MMM.MMMM`  :MM:--:MM:--:MM:  `MMMM.MMM.   WM Theme: Mint-Y-Dark-Aqua (Mint-Y) 
+ :MMM:MMM-  `-MMMMMMMMMMMM-`  -MMM-MMM:    Theme: Mint-Y-Aqua [GTK2/3] 
+  :MMM:MMM:`                `:MMM:MMM:     Icons: Mint-Y-Aqua [GTK2/3] 
+   .MMM.MMMM:--------------:MMMM.MMM.      Terminal: vscode 
+     '-MMMM.-MMMMMMMMMMMMMMM-.MMMM-'       CPU: Intel i7-7700HQ (4) @ 2.808GHz 
+       '.-MMMM``--:::::--``MMMM-.'         GPU: 00:02.0 VMware SVGA II Adapter 
+            '-MMMMMMMMMMMMM-'              Memory: 2546MiB / 7937MiB 
+               ``-:::::-``
+
 $ make --version
 GNU Make 4.3
 Built for x86_64-pc-linux-gnu
@@ -65,6 +89,9 @@ cargo 1.70.0
 
 $ go version
 go version go1.18.1 linux/amd64
+
+$ javac --version
+javac 11.0.21
 
 $ java --version
 openjdk 11.0.21 2023-10-17
@@ -115,4 +142,7 @@ PHP 8.1.2-1ubuntu2.14 (cli) (built: Aug 18 2023 11:41:11) (NTS)
 Copyright (c) The PHP Group
 Zend Engine v4.1.2, Copyright (c) Zend Technologies
     with Zend OPcache v8.1.2-1ubuntu2.14, Copyright (c), by Zend Technologies
+
+$ kotlinc -version
+info: kotlinc-jvm 1.3-SNAPSHOT (JRE 11.0.21+9-post-Ubuntu-0ubuntu122.04)
 ```

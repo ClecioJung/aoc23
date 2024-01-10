@@ -61,7 +61,12 @@ day24:
 	cd $@ && ./main.php
 	@echo
 
+day25:
+	@echo "Running $@"
+	cd $@ && make -s run
+	@echo
+
 clean:
-	rm -rf *.o *.exe *.class */target
+	rm -rf *.o *.exe *.class */target */META-INF
 
 .PHONY: all clean $(DAYS)
