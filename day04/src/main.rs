@@ -1,5 +1,6 @@
 use std::fs;
 
+#[allow(dead_code)]
 #[derive(Debug)]
 struct Scratchcard {
     id: u32,
