@@ -32,6 +32,38 @@ This repository contains my solutions to the Advent of Code 2023 challenges. I'm
 - [Day 24](day24/description.txt): [Php Solution](day24/main.php)
 - [Day 25](day25/description.txt): [Kotlin Solution](day25/main.kt)
 
+## Overview
+
+```console
+$ cloc . --exclude-dir=bin,lib,target --exclude-ext=toml
+     145 text files.
+     145 unique files.                                          
+     109 files ignored.
+
+github.com/AlDanial/cloc v 1.90  T=0.08 s (496.1 files/s, 59405.1 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+Go                              10             90             11           1035
+Java                            10             97              0            791
+Rust                             5             71              0            543
+Pascal                           1             31             11            383
+Markdown                         1             66              0            263
+D                                1             19              3            204
+Perl                             2             22              2            192
+Lua                              1             14              0            180
+JavaScript                       1             10              0            158
+PHP                              1             10             37            152
+make                             5             56              9            136
+C++                              1             13              2            123
+Julia                            1              9              7            104
+Kotlin                           1              6              2             78
+Python                           1              9              3             77
+-------------------------------------------------------------------------------
+SUM:                            42            523             87           4419
+-------------------------------------------------------------------------------
+```
+
 ## How to run
 
 To run a program for a specific day, simply use the `make` command followed by the day number. For example, to run the program for day 1:
@@ -51,6 +83,151 @@ make
 This will execute all the programs sequentially.
 
 Note: Make sure you have the necessary dependencies and configurations set up before running the programs.
+
+## Output
+
+```console
+$ time make
+Running day01
+cd day01 && cargo run --release
+    Finished release [optimized] target(s) in 0.12s
+     Running `target/release/day01`
+Part 01: 55447
+Part 02: 54706
+
+Running day02
+cd day02 && cargo run --release
+    Finished release [optimized] target(s) in 0.12s
+     Running `target/release/day02`
+Part 01: 2810
+Part 02: 69110
+
+Running day03
+cd day03 && cargo run --release
+    Finished release [optimized] target(s) in 0.14s
+     Running `target/release/day03`
+Part 01: 537732
+Part 02: 84883664
+
+Running day04
+cd day04 && cargo run --release
+    Finished release [optimized] target(s) in 0.10s
+     Running `target/release/day04`
+Part 01: 17803
+Part 02: 5554894
+
+Running day05
+cd day05 && cargo run --release
+    Finished release [optimized] target(s) in 0.13s
+     Running `target/release/day05`
+Part 01: 323142486
+Part 02: 79874951
+
+Running day06
+cd day06 && go run main.go
+Part 01: 303600
+Part 02: 23654842
+
+Running day07
+cd day07 && go run main.go
+Part 01: 252656917
+Part 02: 253499763
+
+Running day08
+cd day08 && go run main.go
+Part 01: 19099
+Part 02: 17099847107071
+
+Running day09
+cd day09 && go run main.go
+Part 01: 1992273652
+Part 02: 1012
+
+Running day10
+cd day10 && go run main.go
+Part 01: 6846
+Part 02: 325
+
+Running day11
+javac day11/Main.java && java day11.Main 
+Part 01: 9724940
+Part 02: 569052586852
+
+Running day12
+javac day12/Main.java && java day12.Main 
+Part 01: 7191
+Part 02: 6512849198636
+
+Running day13
+javac day13/Main.java && java day13.Main 
+Part 01: 31265
+Part 02: 39359
+
+Running day14
+javac day14/Main.java && java day14.Main 
+Part 01: 108889
+Part 02: 104671
+
+Running day15
+javac day15/Main.java && java day15.Main 
+Part 01: 512283
+Part 02: 215827
+
+Running day16
+cd day16 && ./main.js
+Part 01: 8116
+Part 02: 8383
+
+Running day17
+cd day17 && /usr/bin/pypy3 main.py
+Part 01: 936
+Part 02: 1157
+
+Running day18
+cd day18 && make -s run
+Part 01: 41019
+Part 02: 96116995735219
+
+Running day19
+cd day19 && ./main.lua
+Part 01: 325952
+Part 02: 125744206494820
+
+Running day20
+cd day20 && make -s run
+Part 01: 747304011
+Part 02: 220366255099387
+
+Running day21
+cd day21 && ./main.jl
+Part 01: 3820
+Part 02: 632421652138917
+
+Running day22
+cd day22 && ./main.pm
+Part 01: 395
+Part 02: 64714
+
+Running day23
+cd day23 && make -s run
+Part 01: 2330
+Part 02: 6518
+
+Running day24
+cd day24 && ./main.php
+
+Part 01: 21785
+Part 02: 554668916217145
+
+Running day25
+cd day25 && make -s run
+Part 01: 551196
+
+
+real    0m29,291s
+user    0m34,231s
+sys     0m2,716s
+```
 
 ## Environment
 
@@ -103,6 +280,10 @@ v12.22.9
 
 $ python3 --version
 Python 3.10.12
+
+$ pypy3 --version
+Python 3.8.13 (7.3.9+dfsg-1ubuntu0.1, Nov 15 2022, 06:22:50)
+[PyPy 7.3.9 with GCC 11.3.0]
 
 $ g++ --version
 g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0

@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 from bisect import insort
-from dataclasses import dataclass
 
 LEFT  = 0
 RIGHT = 1
@@ -9,78 +8,57 @@ UP    = 2
 DOWN  = 3
 
 DIRECTIONS = 4
-
-@dataclass
-class Node:
-    visited: bool = False
-    distance: int = float("inf")
-
-@dataclass
-class NodeToVisit:
-    row: int
-    col: int
-    direction: int
-    moves: int
-    distance: int
-
-    def __iter__(self):
-        return iter(self.__dict__.values())
-
-def next_node(nodes_to_visit, nodes):
-    while True:
-        row, col, direction, moves, _ = nodes_to_visit.pop(0)
-        if not nodes[row][col][direction][moves].visited:
-            return (row, col, direction, moves)
-
-def append_if_valid(nodes, movements, maximum_moves, row, col, direction, moves, next_direction):
-    if 0 <= row and row < len(nodes) and 0 <= col and col < len(nodes[row]):
-        if (direction, next_direction) not in [(RIGHT, LEFT), (LEFT, RIGHT), (UP, DOWN), (DOWN, UP)]:
-            next_moves = moves+1 if direction == next_direction else 0
-            if next_moves < maximum_moves:
-                if not nodes[row][col][next_direction][next_moves].visited:
-                    movements.append((row, col, next_direction, next_moves))
-    return movements
-
-def available_moves(nodes, row, col, direction, moves, minimum_moves, maximum_moves):
+    
+def available_moves(row, col, direction, moves, max_row, max_col, minimum_moves, maximum_moves):
+    directions = {
+        LEFT:  (0, -1),
+        RIGHT: (0, 1),
+        UP:    (-1, 0),
+        DOWN:  (1, 0)
+    }
     movements = []
-    if moves < minimum_moves-1:
-        if direction == LEFT:
-            append_if_valid(nodes, movements, maximum_moves, row, col-1, direction, moves, direction)
-        elif direction == RIGHT:
-            append_if_valid(nodes, movements, maximum_moves, row, col+1, direction, moves, direction)
-        elif direction == UP:
-            append_if_valid(nodes, movements, maximum_moves, row-1, col, direction, moves, direction)
-        elif direction == DOWN:
-            append_if_valid(nodes, movements, maximum_moves, row+1, col, direction, moves, direction)
-        return movements
-    append_if_valid(nodes, movements, maximum_moves, row, col-1, direction, moves, LEFT)
-    append_if_valid(nodes, movements, maximum_moves, row, col+1, direction, moves, RIGHT)
-    append_if_valid(nodes, movements, maximum_moves, row-1, col, direction, moves, UP)
-    append_if_valid(nodes, movements, maximum_moves, row+1, col, direction, moves, DOWN)
+    for next_direction, (drow, dcol) in directions.items():
+        if (direction, next_direction) not in [(RIGHT, LEFT), (LEFT, RIGHT), (UP, DOWN), (DOWN, UP)]:
+            if moves >= minimum_moves - 1 or next_direction == direction:
+                next_moves = moves + 1 if direction == next_direction else 0
+                if next_moves < maximum_moves:
+                    next_row, next_col = row + drow, col + dcol
+                    if 0 <= next_row < max_row and 0 <= next_col < max_col:
+                        movements.append((next_row, next_col, next_direction, next_moves))
     return movements
 
 # This algorithm became very slow. It takes around 15 seconds to run. Maybe it is python's fault.
 def dijkstra_algorithm(graph, minimum_moves=0, maximum_moves=3):
-    nodes = [[[[Node() for _ in range(maximum_moves)] # Moves
-               for _ in range(DIRECTIONS)]            # Directions
-               for _ in range(len(graph[0]))]         # Columns
-               for _ in range(len(graph))]            # Lines
+    max_row = len(graph)
+    max_col = len(graph[0])
+    visited = [[[[False
+                for _ in range(maximum_moves)] # Moves
+                for _ in range(DIRECTIONS)]    # Directions
+                for _ in range(max_col)]       # Columns
+                for _ in range(max_row)]       # Lines
+    distances = [[[[float("inf")
+                for _ in range(maximum_moves)] # Moves
+                for _ in range(DIRECTIONS)]    # Directions
+                for _ in range(max_col)]       # Columns
+                for _ in range(max_row)]       # Lines
     nodes_to_visit = []
     # Start nodes
-    nodes[0][0][RIGHT][0].distance = 0
-    nodes[0][0][DOWN][0].distance = 0
-    nodes_to_visit.append(NodeToVisit(0, 0, RIGHT, 0, 0))
-    nodes_to_visit.append(NodeToVisit(0, 0, DOWN, 0, 0))
+    distances[0][0][RIGHT][0] = 0
+    distances[0][0][DOWN][0] = 0
+    nodes_to_visit.append((0, 0, 0, RIGHT, 0))
+    nodes_to_visit.append((0, 0, 0, DOWN, 0))
     while len(nodes_to_visit) > 0:
-        row, col, direction, moves = next_node(nodes_to_visit, nodes)
-        nodes[row][col][direction][moves].visited = True
+        _, row, col, direction, moves = nodes_to_visit.pop(0)
+        if visited[row][col][direction][moves]: continue
+        visited[row][col][direction][moves] = True
         # Update neighbors' distances
-        for (i, j, dir, mov) in available_moves(nodes, row, col, direction, moves, minimum_moves, maximum_moves):
-            dist = graph[i][j] + nodes[row][col][direction][moves].distance
-            if dist <= nodes[i][j][dir][mov].distance:
-                nodes[i][j][dir][mov].distance = dist
-                insort(nodes_to_visit, NodeToVisit(i, j, dir, mov, dist), key=lambda x: x.distance)
-    return min([nodes[len(nodes)-1][len(nodes[0])-1][dir][mov].distance for dir in range(DIRECTIONS) for mov in range(max(0,minimum_moves-1), maximum_moves)])
+        for (i, j, dir, mov) in available_moves(row, col, direction, moves, max_row, max_col, minimum_moves, maximum_moves):
+            if not visited[i][j][dir][mov]:
+                dist = graph[i][j] + distances[row][col][direction][moves]
+                if dist < distances[i][j][dir][mov]:
+                    distances[i][j][dir][mov] = dist
+                    insort(nodes_to_visit, (dist, i, j, dir, mov))
+    return min([distances[max_row-1][max_col-1][dir][mov] for dir in range(DIRECTIONS) for mov in range(max(0,minimum_moves-1), maximum_moves)])
 
 def part01(file_path):
     with open(file_path) as f:

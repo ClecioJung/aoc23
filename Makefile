@@ -9,6 +9,8 @@ HAMCREST_LINK = https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/ha
 JUNIT = $(LIB)/junit-4.12.jar
 HAMCREST = $(LIB)/hamcrest-core-1.3.jar
 
+PYTHON_INTERPRETER := $(shell which pypy3 2>/dev/null || echo python3)
+
 DAYS = $(wildcard day*)
 DAYS_TEST = $(addsuffix -test,$(DAYS))
 
@@ -69,7 +71,7 @@ day16 day16-test:
 
 day17 day17-test:
 	@echo "Running $@"
-	cd $(patsubst %-test,%,$@) && ./main.py
+	cd $(patsubst %-test,%,$@) && $(PYTHON_INTERPRETER) main.py
 	@echo
 
 day18 day18-test:
