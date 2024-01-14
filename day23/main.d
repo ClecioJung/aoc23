@@ -1,12 +1,34 @@
 import std;
 
-Tuple!(int, int) findInitialPosition(const string[] map) {
-    for (int i = 0; i < map[0].length; i++) {
-        if (map[0][i] == '.') {
-            return tuple(0, i);
+size_t findIndex(alias pred, R)(R range) {
+    foreach (i, elem; range) {
+        if (pred(elem)) {
+            return i;
         }
     }
+    return range.length;
+}
+
+size_t insertIfDontExist(T)(ref T[] range, T element) {
+    auto index = findIndex!(t => t == element)(range);
+    if (index >= range.length) {
+        range ~= element;
+        index = cast(long)range.length - 1;
+    }
+    return index;
+}
+
+Tuple!(int, int) findInitialPosition(const string[] map) {
+    auto index = findIndex!(t => t == '.')(map[0]);
+    if (index < map[0].length) {
+        return tuple(0, cast(int)index);
+    }
     throw new Exception("Didn't found initial position!");
+}
+
+bool isFinalPosition(const string[] map, const Tuple!(int, int) position) {
+    auto height = map.length;
+    return (position[0] >= height-1);
 }
 
 char mapAt(const string[] map, const Tuple!(int, int) pos) {
@@ -68,63 +90,6 @@ Tuple!(Tuple!(int, int), char)[] getNextPositions(
     return nextPositions;
 }
 
-bool isFinalPosition(const string[] map, const Tuple!(int, int) position) {
-    auto height = map.length;
-    return (position[0] >= height-1);
-}
-
-struct MapPoint {
-    Tuple!(int, int) pos;
-    int distance;
-    char direction;
-
-    this(const Tuple!(int, int) pos, const int distance, const char direction) {
-        this.pos = pos;
-        this.distance = distance;
-        this.direction = direction;
-    }
-}
-
-// BFS - Breadth First Search
-int[] getMaxDistance(const string[] map) {
-    auto initialPos = findInitialPosition(map);
-    int[] distances;
-    MapPoint[] queue;
-    queue ~= MapPoint(initialPos, 0, 'v');
-    int queueIndex = 0;
-    while (queueIndex < queue.length) {
-        auto current = queue[queueIndex];
-        queueIndex++;
-        while (true) {
-            auto nextPositions = getNextPositions(map, current.pos, current.direction, true);
-            auto distance = current.distance + 1;
-            if (nextPositions.length == 1) {
-                auto position = nextPositions[0][0];
-                if (isFinalPosition(map, position)) {
-                    distances ~= distance;
-                    break;
-                }
-                auto direction = nextPositions[0][1];
-                current = MapPoint(position, distance, direction);
-            } else { // dead-end or intersection
-                foreach (nextPosition; nextPositions) {
-                    auto position = nextPosition[0];
-                    auto direction = nextPosition[1];
-                    queue ~= MapPoint(position, distance, direction);
-                }
-                break;
-            }
-        }
-    }
-    return distances;
-}
-
-int part01(const string filepath) {
-    const string[] map = readText(filepath).splitLines();
-    int[] distances = getMaxDistance(map);
-    return maxElement(distances);
-}
-
 struct Node {
     Tuple!(int, int) pos;
     size_t index;
@@ -137,183 +102,119 @@ struct Node {
     }
 }
 
-struct Path {
-    Tuple!(size_t, size_t) points;
-    int distance;
-
-    this(const size_t begin, const size_t end, const int distance) {
-        this.points = tuple(min(begin, end), max(begin, end));
-        this.distance = distance;
-    }
-}
-
-struct Edge {
-    size_t node;
-    int distance;
-
-    this(const size_t node, const int distance) {
-        this.node = node;
-        this.distance = distance;
-    }
-}
-
 struct SearchPath {
     size_t node;
     int distance;
-    size_t[] visited;
+    static const int VISITED_LENGTH = 50;
+    bool[VISITED_LENGTH] visited;
 
-    this(const size_t node, const int distance, const size_t[] visited) {
+    this(const size_t node, const int distance, const size_t size) {
         this.node = node;
         this.distance = distance;
-        this.visited ~= visited ~ node;
+        assert(size < visited.length);
+        this.visited[node] = true;
+    }
+
+    this(const size_t node, const int distance, const bool[] visited) {
+        this.node = node;
+        this.distance = distance;
+        foreach (index, visit; visited) {
+            this.visited[index] = visit;
+        }
+        this.visited[node] = true;
     }
 }
 
 struct Graph {
     size_t initial;
     size_t goal;
-    Tuple!(int, int)[] nodes;
-    Path[] paths;
+    int[][] adjacencyMatrix;
 
-    this(const Tuple!(int, int) initialPos) {
-        this.nodes ~= initialPos;
-        this.goal = 0;
-    }
-
-    int findPos(const Tuple!(int, int) pos) {
-        for (int i = 0; i < nodes.length; i++) {
-            auto node = nodes[i];
-            if (node[0] == pos[0] && node[1] == pos[1]) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    int findPath(const size_t begin, const size_t end) {
-        Tuple!(size_t, size_t) points = tuple(min(begin, end), max(begin, end));
-        for (int i = 0; i < paths.length; i++) {
-            auto path_points = paths[i].points;
-            if (path_points[0] == points[0] && path_points[1] == points[1]) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    int addPath(const size_t node, const Tuple!(int, int) pos, const int distance) {
-        int to = findPos(pos);
-        if (to >= 0) {
-            if (findPath(node, cast(size_t)to) < 0) {
-                this.paths ~= Path(node, cast(size_t)to, distance);
-            }
-            return -1;
-        }
-        this.nodes ~= pos;
-        size_t end = cast(long)this.nodes.length - 1;
-        this.paths ~= Path(node, end, distance);
-        return cast(int)end;
-    }
-
-    int setGoal(const size_t node, const Tuple!(int, int) pos, const int distance) {
-        auto goal = addPath(node, pos, distance);
-        if (goal >= 0) {
-            this.goal = goal;
-        }
-        return goal;
-    }
-
-    // BFS - Breadth First Search
-    static Graph build(const string[] map) {
+    this(const string[] map, const bool slippery) {
+        this.initial = 0;
+        this.goal = ulong.max;
         auto initialPos = findInitialPosition(map);
-        Graph graph = Graph(initialPos);
-        Node[] queue;
-        queue ~= Node(initialPos, graph.initial, 'v');
+        // This first part uses BFS (Breadth First Search) to build a list of nodes and the paths between them
+        Tuple!(int, int)[] nodes = [initialPos];
+        Tuple!(size_t, size_t, int)[] paths; // (indexFrom, indexTo, distance)
+        Node[] queue = [Node(initialPos, this.initial, 'v')];
         int queueIndex = 0;
         while (queueIndex < queue.length) {
             auto current = queue[queueIndex];
             queueIndex++;
             int distance = 0;
             while (true) {
-                auto nextPositions = getNextPositions(map, current.pos, current.direction, false);
+                auto nextPositions = getNextPositions(map, current.pos, current.direction, slippery);
                 distance++;
-                if (nextPositions.length == 1) {
-                    auto position = nextPositions[0][0];
-                    if (isFinalPosition(map, position)) {
-                        graph.setGoal(current.index, position, distance);
-                        break;
-                    }
-                    auto direction = nextPositions[0][1];
-                    current = Node(position, current.index, direction);
-                } else { // dead-end or intersection
-                    int nodeIndex = graph.addPath(current.index, current.pos, distance);
-                    if (nodeIndex >= 0) { // If a new node was created
+                if (nextPositions.length != 1) { // found intersection
+                    auto to = insertIfDontExist(nodes, current.pos);
+                    paths ~= tuple(current.index, to, distance);
+                    if (to == (cast(long)nodes.length-1)) { // If a new node was created
                         foreach (nextPosition; nextPositions) {
                             auto position = nextPosition[0];
                             auto direction = nextPosition[1];
-                            queue ~= Node(position, nodeIndex, direction);
+                            queue ~= Node(position, to, direction);
                         }
                     }
                     break;
                 }
+                auto position = nextPositions[0][0];
+                if (isFinalPosition(map, position)) {
+                    this.goal = insertIfDontExist(nodes, position);
+                    paths ~= tuple(current.index, this.goal, distance);
+                    break;
+                }
+                auto direction = nextPositions[0][1];
+                current = Node(position, current.index, direction);
             }
         }
-        return graph;
-    }
-
-    Edge[] getNextEdges(const size_t node) {
-        Edge[] nextEdges;
+        assert(this.goal < nodes.length);
+        // Compute Adjacency Matrix
+        foreach (_; 0 .. nodes.length) {
+            int[] row = new int[nodes.length];
+            this.adjacencyMatrix ~= row;
+        }
         foreach (path; paths) {
-            if (path.points[0] == node) {
-                nextEdges ~= Edge(path.points[1], path.distance);
-            } else if (path.points[1] == node) {
-                nextEdges ~= Edge(path.points[0], path.distance);
-            }
+            this.adjacencyMatrix[path[0]][path[1]] = path[2];
         }
-        return nextEdges;
     }
 
     // DFS - Depth First Search
-    int[] distances() {
-        int[] distances;
+    int maxDistance() {
+        int distance = -1;
         SearchPath[] stack;
-        stack ~= SearchPath(this.initial, 0, [this.initial]);
+        stack ~= SearchPath(this.initial, 0, adjacencyMatrix.length);
         while (stack.length > 0) {
             auto current = stack[$-1];
             stack.length--;
-            if (current.node == this.goal) {
-                distances ~= current.distance;
-            }
-            auto nextEdges = getNextEdges(current.node);
-            foreach (nextEdge; nextEdges) {
-                if (find(current.visited, nextEdge.node).empty) {
-                    auto distance = nextEdge.distance + current.distance;
-                    //stack ~= SearchPath(nextEdge.node, distance, current.visited ~ nextEdge.node);
-                    stack ~= SearchPath(nextEdge.node, distance, current.visited);
+            for (size_t node = 0; node < adjacencyMatrix.length; node++) {
+                auto weight = adjacencyMatrix[current.node][node];
+                if (weight > 0) {
+                    if (node == this.goal) {
+                        distance = max(distance, weight + current.distance);
+                    } else if (!current.visited[node]) {
+                        stack ~= SearchPath(node, weight + current.distance, current.visited);
+                    }
                 }
             }
         }
-        return distances;
+        return distance;
     }
+}
+
+int part01(const string filepath) {
+    const string[] map = readText(filepath).splitLines();
+    Graph graph = Graph(map, true);
+    return graph.maxDistance();
 }
 
 int part02(const string filepath) {
     const string[] map = readText(filepath).splitLines();
-    Graph graph = Graph.build(map);
-    int[] distances = graph.distances();
-    return maxElement(distances);
+    Graph graph = Graph(map, false);
+    return graph.maxDistance();
 }
 
-// Part 01 was solved with a straightforward BFS applied directly to the provided input map.
-// However, this approach proved inefficient for Part 02, prompting me to search for a more
-// optimized strategy. I transformed and simplified the input map into a graph using BFS and
-// subsequently employed DFS to explore all paths, enabling the discovery of the solution.
-// Notably, this approach was not directly applicable to Part 01 due to its directional
-// dependency, in contrast to the direction-independent nature of Part 02. Despite these
-// optimizations, the implemented solution for Part 02 still exhibits suboptimal performance,
-// taking approximately 1 minute and 20 seconds to execute on my machine.
-void main()
-{
+void main() {
     assert(part01("sample.txt") == 94);
     auto part01output = part01("input.txt");
     writeln("Part 01: ", part01output);
