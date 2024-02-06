@@ -127,7 +127,35 @@ day25 day25-test:
 clean:
 	rm -rf lib bin *.o *.exe *.class *.jar */target
 
-.PHONY: all clean $(DAYS) $(DAYS_TEST)
+install-julia:
+	wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.7-linux-x86_64.tar.gz
+	tar zxvf julia-1.6.7-linux-x86_64.tar.gz
+	sudo mv julia-1.6.7/ /opt/
+	sudo ln -s /opt/julia-1.6.7/bin/julia /usr/bin/julia
+	rm julia*.tar.gz
+
+remove-julia:
+	sudo rm -rf /opt/julia-1.6.7/
+	sudo rm -f /usr/bin/julia
+
+install-dmd:
+	wget -qO dmd.deb http://downloads.dlang.org/releases/2.x/2.106.1/dmd_2.106.1-0_amd64.deb
+	sudo apt install -y ./dmd.deb
+	rm -rf dmd.deb
+
+install: install-julia install-dmd
+	sudo apt-get update
+	sudo apt-get -y install make cargo golang-go nodejs python3 pypy3 build-essential lua5.4 fpc perl php
+	sudo apt-get -y install default-jdk default-jre kotlin
+
+remove: remove-julia
+	sudo apt remove -y cargo golang-go nodejs pypy3 lua5.4 fpc dmd
+	sudo apt remove -y default-jdk default-jre kotlin
+	sudo apt autoremove -y
+
+.PHONY: all clean $(DAYS) $(DAYS_TEST) \
+	install install-julia install-dmd \
+	remove remove-julia
 
 # ----------------------------------------
 # End
